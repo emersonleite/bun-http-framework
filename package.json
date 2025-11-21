@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "dev": "bun run --watch server.ts",
+    "build": "bun build ./server.ts --outdir ./out --target bun"
+  },
+  "dependencies": {
+    "@types/bun": "^1.3.2"
+  },
+  "name": "bun-framework",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
