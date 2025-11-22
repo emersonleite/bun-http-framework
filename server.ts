@@ -9,7 +9,23 @@ curl --location --request POST 'http://localhost:3000/cor?cor=teste' \
 
 import { serve } from 'bun';
 
+/* NOTA - forma de definir rotas com BUN */
+const routes_2 = {
+  '/mundo': () =>
+    new Response(JSON.stringify({ ola: 'mundo' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }),
+};
+
 const server = serve({
+  /* NOTA - rotas podem ser usadas em um objeto na função serve */
+
+  routes: {
+    '/ola': () => new Response('Ola'),
+    ...routes_2,
+  },
+
   async fetch(req) {
     const url = new URL(req.url, 'http://localhost:3000');
 
@@ -37,7 +53,7 @@ const server = serve({
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Methods': 'POST, GET',
         },
       });
       // NOTA - ou com parse direto para JSON
@@ -54,7 +70,8 @@ const server = serve({
       return new Response(JSON.stringify({ cor_1, cor_2 }), {
         status: 200,
         headers: {
-          'Access-Control-Allow-Methods': 'POST',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Methods': 'POST, GET',
         },
       });
     }
