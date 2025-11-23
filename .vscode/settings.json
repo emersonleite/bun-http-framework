@@ -4,7 +4,7 @@
     "package.json": false,
     "package-lock.json": true,
     "node_modules": true,
-    ".gitignore": true,
+    /* ".gitignore": true, */
     "bun.lockb": true,
     "out": true,
     "README.md": true,
