@@ -6,7 +6,7 @@
     "node_modules": true,
     /* ".gitignore": true, */
     "bun.lockb": true,
-    "out": true,
+    /* "out": true, */
     "README.md": true,
     "tsconfig.json": true
   }
