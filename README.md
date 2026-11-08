@@ -30,15 +30,15 @@ O servidor fica disponível em `http://localhost:3001`.
 
 O `Dockerfile` define como a imagem da aplicação é criada:
 
-| Instrução                           | Explicação                                                                                                                             |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `FROM oven/bun:1.3.2`               | Usa a imagem oficial do Bun na versão `1.3.2` como base.                                                                               |
-| `WORKDIR /app`                      | Define `/app` como diretório de trabalho dentro do container.                                                                          |
-| `COPY package.json bun.lockb ./`    | Copia os arquivos de dependências antes do restante do código, permitindo reaproveitar a camada de instalação quando elas não mudarem. |
-| `RUN bun install --frozen-lockfile` | Instala as dependências exatamente conforme o `bun.lockb`.                                                                             |
-| `COPY . .`                          | Copia os arquivos do projeto para `/app`.                                                                                              |
-| `EXPOSE 3001`                       | Documenta que a aplicação escuta na porta `3001` dentro do container.                                                                  |
-| `CMD ["bun", "run", "server.ts"]`   | Inicia o servidor quando o container é executado.                                                                                      |
+| Instrução                             | Explicação                                                                                                                             |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `FROM oven/bun:1.3.2`                 | Usa a imagem oficial do Bun na versão `1.3.2` como base.                                                                               |
+| `WORKDIR /app`                        | Define `/app` como diretório de trabalho dentro do container.                                                                          |
+| `COPY package.json bun.lockb ./`      | Copia os arquivos de dependências antes do restante do código, permitindo reaproveitar a camada de instalação quando elas não mudarem. |
+| `RUN bun install --frozen-lockfile`   | Instala as dependências exatamente conforme o `bun.lockb`.                                                                             |
+| `COPY . .`                            | Copia os arquivos do projeto para `/app`.                                                                                              |
+| `EXPOSE 3001`                         | Documenta que a aplicação escuta na porta `3001` dentro do container.                                                                  |
+| `CMD ["bun", "run", "src/server.ts"]` | Inicia o servidor quando o container é executado.                                                                                      |
 
 O `docker-compose.yml` descreve o serviço `app` e seus recursos:
 
@@ -105,26 +105,28 @@ Essa abordagem permite manter regras de validação separadas da lógica princip
 
 ## Estrutura principal
 
-| Arquivo              | Responsabilidade                                 |
-| -------------------- | ------------------------------------------------ |
-| `server.ts`          | Cria a aplicação e registra as rotas             |
-| `Pan.ts`             | Expõe a API da aplicação e inicia o servidor Bun |
-| `Router.ts`          | Registra rotas `GET` e `POST`                    |
-| `routeHandler.ts`    | Monta o contexto e executa os guards e handlers  |
-| `Context.ts`         | Cria o contexto da requisição                    |
-| `guards.ts`          | Contém as funções de validação das requisições   |
-| `types.ts`           | Define os tipos usados pelo framework            |
-| `Dockerfile`         | Define a imagem baseada em `oven/bun:1.3.2`      |
-| `docker-compose.yml` | Publica a porta `3001` e gerencia o serviço      |
-| `Makefile`           | Fornece atalhos para o Docker Compose            |
+Os arquivos-fonte TypeScript ficam dentro de `src/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
+
+| Arquivo               | Responsabilidade                                 |
+| --------------------- | ------------------------------------------------ |
+| `src/server.ts`       | Cria a aplicação e registra as rotas             |
+| `src/Pan.ts`          | Expõe a API da aplicação e inicia o servidor Bun |
+| `src/Router.ts`       | Registra rotas `GET` e `POST`                    |
+| `src/routeHandler.ts` | Monta o contexto e executa os guards e handlers  |
+| `src/Context.ts`      | Cria o contexto da requisição                    |
+| `src/guards.ts`       | Contém as funções de validação das requisições   |
+| `src/types.ts`        | Define os tipos usados pelo framework            |
+| `Dockerfile`          | Define a imagem baseada em `oven/bun:1.3.2`      |
+| `docker-compose.yml`  | Publica a porta `3001` e gerencia o serviço      |
+| `Makefile`            | Fornece atalhos para o Docker Compose            |
 
 ## Scripts do projeto
 
-| Script    | Comando                                                            | Descrição                                        |
-| --------- | ------------------------------------------------------------------ | ------------------------------------------------ |
-| `dev`     | `bun run --watch server.ts`                                        | Executa o servidor com recarregamento automático |
-| `build`   | `bun build ./server.ts --outdir ./out --target bun && bun preview` | Gera a saída em `out` e inicia o preview         |
-| `preview` | `bun run --watch ./out/server.js`                                  | Executa a saída gerada                           |
+| Script    | Comando                                                                | Descrição                                        |
+| --------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
+| `dev`     | `bun run --watch src/server.ts`                                        | Executa o servidor com recarregamento automático |
+| `build`   | `bun build ./src/server.ts --outdir ./out --target bun && bun preview` | Gera a saída em `out` e inicia o preview         |
+| `preview` | `bun run --watch ./out/server.js`                                      | Executa a saída gerada                           |
 
 ## Licença
 
