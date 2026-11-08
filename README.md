@@ -28,17 +28,41 @@ O servidor fica disponível em `http://localhost:3001`.
 
 ## Docker
 
+O `Dockerfile` define como a imagem da aplicação é criada:
+
+| Instrução                           | Explicação                                                                                                                             |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `FROM oven/bun:1.3.2`               | Usa a imagem oficial do Bun na versão `1.3.2` como base.                                                                               |
+| `WORKDIR /app`                      | Define `/app` como diretório de trabalho dentro do container.                                                                          |
+| `COPY package.json bun.lockb ./`    | Copia os arquivos de dependências antes do restante do código, permitindo reaproveitar a camada de instalação quando elas não mudarem. |
+| `RUN bun install --frozen-lockfile` | Instala as dependências exatamente conforme o `bun.lockb`.                                                                             |
+| `COPY . .`                          | Copia os arquivos do projeto para `/app`.                                                                                              |
+| `EXPOSE 3001`                       | Documenta que a aplicação escuta na porta `3001` dentro do container.                                                                  |
+| `CMD ["bun", "run", "server.ts"]`   | Inicia o servidor quando o container é executado.                                                                                      |
+
+O `docker-compose.yml` descreve o serviço `app` e seus recursos:
+
+| Configuração              | Explicação                                                                  |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `build: .`                | Constrói a imagem usando o `Dockerfile` no diretório atual.                 |
+| `ports: "3001:3001"`      | Mapeia a porta `3001` do computador para a porta `3001` do container.       |
+| `restart: unless-stopped` | Reinicia o serviço automaticamente, exceto quando ele é parado manualmente. |
+
 Construa a imagem e inicie o container:
 
 ```bash
 docker compose up --build
 ```
 
+O parâmetro `--build` força a construção ou atualização da imagem antes de iniciar o serviço. Sem ele, o Compose reutiliza uma imagem já existente quando possível.
+
 Para iniciar em segundo plano:
 
 ```bash
 docker compose up -d --build
 ```
+
+O parâmetro `-d` mantém o processo em segundo plano (modo detached).
 
 Para acompanhar os logs:
 
@@ -52,9 +76,11 @@ Para parar e remover o container e a rede:
 docker compose down
 ```
 
+Esse comando remove os containers e a rede criada pelo Compose, mas não remove a imagem construída.
+
 ### Comandos com Make
 
-O `Makefile` oferece atalhos para os comandos mais usados:
+O `Makefile` oferece atalhos para os comandos mais usados do Docker Compose. Execute `make <comando>` na raiz do projeto:
 
 | Comando        | Descrição                                |
 | -------------- | ---------------------------------------- |
@@ -66,6 +92,8 @@ O `Makefile` oferece atalhos para os comandos mais usados:
 | `make ps`      | Mostra o status dos containers           |
 | `make stop`    | Para o container sem removê-lo           |
 | `make restart` | Reinicia o serviço                       |
+
+Os comandos `up` e `rebuild` usam `-d`, então devolvem o terminal imediatamente. Use `make logs` para acompanhar a saída da aplicação. O comando `make stop` apenas para o container; seus recursos continuam disponíveis para que ele possa ser iniciado novamente com `make up`.
 
 Depois de executar `make up` ou `make rebuild`, acesse `http://localhost:3001`.
 
