@@ -5,7 +5,7 @@
     "package-lock.json": true,
     "node_modules": true,
     /* ".gitignore": true, */
-    "bun.lockb": true,
+    "bun.lockb": false,
     /* "out": true, */
     "README.md": false,
     "tsconfig.json": true
