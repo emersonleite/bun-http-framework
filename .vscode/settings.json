@@ -7,7 +7,7 @@
     /* ".gitignore": true, */
     "bun.lockb": true,
     /* "out": true, */
-    "README.md": true,
+    "README.md": false,
     "tsconfig.json": true
   }
 }
