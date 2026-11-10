@@ -9,7 +9,7 @@ A primeira forma de distribuição pode ser exclusivamente pelo GitHub. A public
 ## Situação atual
 
 - O projeto já possui roteador, contexto de requisição, handlers e guards.
-- `src/core/index.ts` (classe `Pan`) já não contém rotas de exemplo; elas foram movidas para `EXEMPLOS-ROTAS.md`.
+- `src/core/Pan.ts` (classe `Pan`) já não contém rotas de exemplo; elas foram movidas para `EXEMPLOS-ROTAS.md`.
 - `app/server.ts` cria a aplicação e inicia o servidor diretamente.
 - O roteador atualmente registra principalmente rotas `GET` e `POST`.
 - O `package.json` está marcado como privado e ainda descreve uma aplicação, não uma biblioteca distribuível.
@@ -29,8 +29,8 @@ A primeira forma de distribuição pode ser exclusivamente pelo GitHub. A public
 
 ### 1. Separar o núcleo do exemplo
 
-- ~~Remover rotas fixas e guards concretos de `src/core/index.ts`.~~ (feito)
-- Manter `src/core/index.ts` responsável apenas pela criação da aplicação, registro de rotas e inicialização do servidor.
+- ~~Remover rotas fixas e guards concretos de `src/core/Pan.ts`.~~ (feito)
+- Manter `src/core/Pan.ts` responsável apenas pela criação da aplicação, registro de rotas e inicialização do servidor.
 - Manter `app/server.ts` como aplicação de demonstração.
 - Criar exemplos separados, se necessário, em uma pasta como `examples/`.
 
@@ -190,7 +190,7 @@ Origem: https://bun.com/docs/runtime/http/server, comparada com o código atual.
 - [ ] **Guards assíncronos:** `guard(ctx)` não usa `await` e o tipo é `Response | null`. Um guard assíncrono devolveria uma Promise (truthy) e a rota responderia com ela. Aceitar `Response | null | Promise<...>` e fazer `await guard(ctx)`.
 - [ ] **405 ausente:** quando o path existe mas o método não (ex.: `DELETE /mosca/1/ola/2`), a requisição provavelmente cai no 404 do `fetch`. Testar; se confirmado, checar o path em `routes` e devolver 405 com o header `Allow`. A doc não descreve esse caso, então é inferência a validar.
 - [ ] **Porta e opções do `listen`:** o Bun lê `BUN_PORT`, `PORT` ou `NODE_PORT` quando `port` não é passado, mas `app/server.ts` fixa 3001. Aceitar `listen(options?: { port?, hostname? })` e usar `PORT` no exemplo. Permite `port: 0` nos testes, lendo `server.port`.
-- [ ] **Rotas duplicadas:** `addRoute` (`src/router/index.ts`) sobrescreve em silêncio o mesmo método e path registrados duas vezes. Lançar erro ou avisar.
+- [ ] **Rotas duplicadas:** `addRoute` (`src/router/Router.ts`) sobrescreve em silêncio o mesmo método e path registrados duas vezes. Lançar erro ou avisar.
 
 ### Menores
 

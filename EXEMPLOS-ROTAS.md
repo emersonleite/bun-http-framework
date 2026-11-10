@@ -1,6 +1,6 @@
 # Exemplos de rotas (documentação)
 
-Estes exemplos estavam definidos diretamente em `Pan.listen()` (`src/core/index.ts`) como rotas de teste do fluxo de contexto/guards. Foram removidos do código e ficam aqui como referência. O `listen()` agora só registra as rotas vindas do `Router` (`app.get` / `app.post`).
+Estes exemplos estavam definidos diretamente em `Pan.listen()` (`src/core/Pan.ts`) como rotas de teste do fluxo de contexto/guards. Foram removidos do código e ficam aqui como referência. O `listen()` agora só registra as rotas vindas do `Router` (`app.get` / `app.post`).
 
 Imports usados nos exemplos:
 

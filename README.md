@@ -105,17 +105,17 @@ Essa abordagem permite manter regras de validação separadas da lógica princip
 
 ## Estrutura principal
 
-O código do framework fica em `src/`, dividido em módulos (cada um com um `index.ts`). A aplicação de demonstração fica em `app/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
+O código do framework fica em `src/`, dividido em módulos (cada um com um `index.ts` que reexporta a API do módulo). A aplicação de demonstração fica em `app/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
 
 | Arquivo                     | Responsabilidade                                       |
 | --------------------------- | ------------------------------------------------------ |
 | `app/server.ts`             | Cria a aplicação de demonstração e registra as rotas   |
-| `src/core/index.ts`         | Classe `Pan`: expõe a API e inicia/para o servidor Bun |
-| `src/router/index.ts`       | Registra rotas `GET` e `POST`                          |
+| `src/core/Pan.ts`           | Classe `Pan`: expõe a API e inicia/para o servidor Bun |
+| `src/router/Router.ts`      | Registra rotas `GET` e `POST`                          |
 | `src/utils/routeHandler.ts` | Monta o contexto e executa os guards e handlers        |
-| `src/context/index.ts`      | Cria o contexto da requisição                          |
-| `src/guards/index.ts`       | Contém as funções de validação das requisições         |
-| `src/types/index.ts`        | Define os tipos usados pelo framework                  |
+| `src/context/`              | Cria o contexto da requisição (`createContext`)        |
+| `src/guards/`               | Contém as funções de validação das requisições         |
+| `src/types/`                | Define os tipos do framework (um por arquivo)          |
 | `Dockerfile`                | Define a imagem baseada em `oven/bun:1.3.2`            |
 | `docker-compose.yml`        | Publica a porta `3001` e gerencia o serviço            |
 | `Makefile`                  | Fornece atalhos para o Docker Compose                  |
