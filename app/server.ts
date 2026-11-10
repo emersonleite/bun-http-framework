@@ -1,6 +1,6 @@
-import { guardAuth } from "./guards";
-import { Pan } from "./Pan";
-import type { Context } from "./types";
+import { guardAuth } from "../src/guards";
+import { Pan } from "../src/core";
+import type { Context } from "../src/types";
 // import { Database } from 'bun:sqlite';
 
 const app = new Pan();
@@ -29,7 +29,5 @@ app.post(
   },
   [guardAuth],
 );
-
-// console.log(app.getRoutes());
 
 app.listen(3001);

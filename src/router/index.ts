@@ -3,8 +3,8 @@ import {
   type ContextGuard,
   type ContextHandler,
   type RequestHandler,
-} from "./types";
-import { createRouteHandler } from "./routeHandler";
+} from "../types";
+import { createRouteHandler } from "../utils/routeHandler";
 
 export class Router {
   routes: Record<string, Partial<Record<HttpMethod, RequestHandler>>> = {};

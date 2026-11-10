@@ -1,5 +1,5 @@
 import type { BunRequest } from "bun";
-import type { Context, ContextRequest, ContextResponse } from "./types";
+import type { Context, ContextRequest, ContextResponse } from "../types";
 
 async function buildContextRequest(
   request: BunRequest,
