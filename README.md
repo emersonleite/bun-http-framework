@@ -38,7 +38,7 @@ O `Dockerfile` define como a imagem da aplicação é criada:
 | `RUN bun install --frozen-lockfile`   | Instala as dependências exatamente conforme o `bun.lockb`.                                                                             |
 | `COPY . .`                            | Copia os arquivos do projeto para `/app`.                                                                                              |
 | `EXPOSE 3001`                         | Documenta que a aplicação escuta na porta `3001` dentro do container.                                                                  |
-| `CMD ["bun", "run", "src/server.ts"]` | Inicia o servidor quando o container é executado.                                                                                      |
+| `CMD ["bun", "run", "app/server.ts"]` | Inicia o servidor quando o container é executado.                                                                                      |
 
 O `docker-compose.yml` descreve o serviço `app` e seus recursos:
 
@@ -109,7 +109,7 @@ Os arquivos-fonte TypeScript ficam dentro de `src/`. Os arquivos de configuraç�
 
 | Arquivo               | Responsabilidade                                 |
 | --------------------- | ------------------------------------------------ |
-| `src/server.ts`       | Cria a aplicação e registra as rotas             |
+| `app/server.ts`       | Cria a aplicação e registra as rotas             |
 | `src/Pan.ts`          | Expõe a API da aplicação e inicia o servidor Bun |
 | `src/Router.ts`       | Registra rotas `GET` e `POST`                    |
 | `src/routeHandler.ts` | Monta o contexto e executa os guards e handlers  |
@@ -124,8 +124,8 @@ Os arquivos-fonte TypeScript ficam dentro de `src/`. Os arquivos de configuraç�
 
 | Script    | Comando                                                                | Descrição                                        |
 | --------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
-| `dev`     | `bun run --watch src/server.ts`                                        | Executa o servidor com recarregamento automático |
-| `build`   | `bun build ./src/server.ts --outdir ./out --target bun && bun preview` | Gera a saída em `out` e inicia o preview         |
+| `dev`     | `bun run --watch app/server.ts`                                        | Executa o servidor com recarregamento automático |
+| `build`   | `bun build ./app/server.ts --outdir ./out --target bun && bun preview` | Gera a saída em `out` e inicia o preview         |
 | `preview` | `bun run --watch ./out/server.js`                                      | Executa a saída gerada                           |
 
 ## Licença

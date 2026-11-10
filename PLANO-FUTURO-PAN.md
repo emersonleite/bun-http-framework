@@ -10,7 +10,7 @@ A primeira forma de distribuição pode ser exclusivamente pelo GitHub. A public
 
 - O projeto já possui roteador, contexto de requisição, handlers e guards.
 - `src/Pan.ts` ainda mistura a API do framework com rotas e regras da aplicação de exemplo.
-- `src/server.ts` cria a aplicação e inicia o servidor diretamente.
+- `app/server.ts` cria a aplicação e inicia o servidor diretamente.
 - O roteador atualmente registra principalmente rotas `GET` e `POST`.
 - O `package.json` está marcado como privado e ainda descreve uma aplicação, não uma biblioteca distribuível.
 - Não há uma suíte de testes automatizados.
@@ -31,7 +31,7 @@ A primeira forma de distribuição pode ser exclusivamente pelo GitHub. A public
 
 - Remover rotas fixas e guards concretos de `src/Pan.ts`.
 - Manter `src/Pan.ts` responsável apenas pela criação da aplicação, registro de rotas e inicialização do servidor.
-- Manter `src/server.ts` como aplicação de demonstração.
+- Manter `app/server.ts` como aplicação de demonstração.
 - Criar exemplos separados, se necessário, em uma pasta como `examples/`.
 
 ### 2. Definir a API pública

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "bun run --watch app/server.ts",
-    "build": "bun build ./src/server.ts --outdir ./out --target bun && bun preview",
+    "build": "bun build ./app/server.ts --outdir ./out --target bun && bun preview",
     "preview": "bun run --watch ./out/server.js"
   },
   "name": "bun-framework",
