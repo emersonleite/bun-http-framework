@@ -25,6 +25,7 @@ app.post(
   "/mosca/:id/ola/:id_2",
   async (ctx) => {
     // await logContext(ctx);
+    console.log(ctx.req.params?.id!);
     return ctx.res.json({ message: "Não autorizado" }, 401);
   },
   [guardAuth],
