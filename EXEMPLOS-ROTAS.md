@@ -1,13 +1,13 @@
 # Exemplos de rotas (documentação)
 
-Estes exemplos estavam definidos diretamente em `Pan.listen()` (`src/Pan.ts`) como rotas de teste do fluxo de contexto/guards. Foram removidos do código e ficam aqui como referência. O `listen()` agora só registra as rotas vindas do `Router` (`app.get` / `app.post`).
+Estes exemplos estavam definidos diretamente em `Pan.listen()` (`src/core/index.ts`) como rotas de teste do fluxo de contexto/guards. Foram removidos do código e ficam aqui como referência. O `listen()` agora só registra as rotas vindas do `Router` (`app.get` / `app.post`).
 
 Imports usados nos exemplos:
 
 ```ts
-import { createContext } from "./Context";
-import { guardAuth, guardRequireQuery } from "./guards";
-import { createRouteHandler } from "./routeHandler";
+import { createContext } from "../context";
+import { guardAuth, guardRequireQuery } from "../guards";
+import { createRouteHandler } from "../utils/routeHandler";
 ```
 
 ## 1. Rota direta do Bun
@@ -64,7 +64,7 @@ Mesma rota, mas deixando o `createRouteHandler` fazer os passos 1 e 2. É exatam
 },
 ```
 
-O que acontece em `return contextHandler(ctx)` (`routeHandler.ts`):
+O que acontece em `return contextHandler(ctx)` (`src/utils/routeHandler.ts`):
 
 - `contextHandler` é a função `(ctx) => ctx.res.json(...)` passada como 1º argumento do `createRouteHandler`.
 - Ela **não** rodou até agora. O `createRouteHandler` só a guardou (closure).

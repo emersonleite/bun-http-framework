@@ -9,7 +9,7 @@ A primeira forma de distribuição pode ser exclusivamente pelo GitHub. A public
 ## Situação atual
 
 - O projeto já possui roteador, contexto de requisição, handlers e guards.
-- `src/Pan.ts` ainda mistura a API do framework com rotas e regras da aplicação de exemplo.
+- `src/core/index.ts` (classe `Pan`) já não contém rotas de exemplo; elas foram movidas para `EXEMPLOS-ROTAS.md`.
 - `app/server.ts` cria a aplicação e inicia o servidor diretamente.
 - O roteador atualmente registra principalmente rotas `GET` e `POST`.
 - O `package.json` está marcado como privado e ainda descreve uma aplicação, não uma biblioteca distribuível.
@@ -29,8 +29,8 @@ A primeira forma de distribuição pode ser exclusivamente pelo GitHub. A public
 
 ### 1. Separar o núcleo do exemplo
 
-- Remover rotas fixas e guards concretos de `src/Pan.ts`.
-- Manter `src/Pan.ts` responsável apenas pela criação da aplicação, registro de rotas e inicialização do servidor.
+- ~~Remover rotas fixas e guards concretos de `src/core/index.ts`.~~ (feito)
+- Manter `src/core/index.ts` responsável apenas pela criação da aplicação, registro de rotas e inicialização do servidor.
 - Manter `app/server.ts` como aplicação de demonstração.
 - Criar exemplos separados, se necessário, em uma pasta como `examples/`.
 
@@ -83,11 +83,14 @@ A estrutura esperada poderá ser semelhante a:
 ```text
 src/
   index.ts
-  Pan.ts
-  Router.ts
-  Context.ts
-  routeHandler.ts
-  types.ts
+  core/index.ts
+  router/index.ts
+  context/index.ts
+  guards/index.ts
+  utils/routeHandler.ts
+  types/index.ts
+app/
+  server.ts
 examples/
   basic-server.ts
   guards.ts
@@ -153,7 +156,7 @@ O usuário poderá instalar diretamente com Bun usando a URL ou a referência do
 
 ## Checklist de versão inicial
 
-- [ ] Separar rotas de exemplo do núcleo da PAN.
+- [x] Separar rotas de exemplo do núcleo da PAN.
 - [ ] Criar `src/index.ts`.
 - [ ] Definir exports públicos.
 - [ ] Decidir a licença.
