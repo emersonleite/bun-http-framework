@@ -1,4 +1,4 @@
-import type { ContextGuard } from "../types";
+import type { ContextGuard } from "./types";
 
 export const guardAuth: ContextGuard = (ctx) => {
   if (!ctx.req.headers.get("authorization")) {

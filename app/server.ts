@@ -1,6 +1,6 @@
 import { guardAuth } from "../src/guards";
 import { Pan } from "../src/core";
-import type { Context } from "../src/types";
+import type { Context } from "../src/context";
 // import { Database } from 'bun:sqlite';
 
 const app = new Pan();

@@ -1,4 +1,4 @@
-import type { ContextResponse } from "../types";
+import type { ContextResponse } from "./types";
 
 export function buildContextResponse(): ContextResponse {
   return {

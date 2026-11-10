@@ -1,6 +1,7 @@
 import type { BunRequest } from "bun";
 import { createContext } from "../context";
-import type { ContextGuard, ContextHandler, RequestHandler } from "../types";
+import type { ContextGuard } from "../guards";
+import type { ContextHandler, RequestHandler } from "./types";
 
 export function createRouteHandler(
   contextHandler: ContextHandler,

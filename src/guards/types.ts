@@ -1,3 +1,3 @@
-import type { Context } from "./context";
+import type { Context } from "../context";
 
 export type ContextGuard = (ctx: Context) => Response | null;

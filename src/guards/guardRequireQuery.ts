@@ -1,4 +1,4 @@
-import type { ContextGuard } from "../types";
+import type { ContextGuard } from "./types";
 
 export const guardRequireQuery: ContextGuard = (ctx) => {
   if (!ctx.req.query.get("q")) {

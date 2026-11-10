@@ -1,5 +1,5 @@
 import type { BunRequest } from "bun";
-import type { Context } from "../types";
+import type { Context } from "./types";
 import { buildContextRequest } from "./buildContextRequest";
 import { buildContextResponse } from "./buildContextResponse";
 
