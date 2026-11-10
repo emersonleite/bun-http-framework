@@ -105,20 +105,21 @@ Essa abordagem permite manter regras de validação separadas da lógica princip
 
 ## Estrutura principal
 
-Os arquivos-fonte TypeScript ficam dentro de `src/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
+O código do framework fica em `src/`, dividido em módulos (cada um com um `index.ts`). A aplicação de demonstração fica em `app/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
 
-| Arquivo               | Responsabilidade                                 |
-| --------------------- | ------------------------------------------------ |
-| `app/server.ts`       | Cria a aplicação e registra as rotas             |
-| `src/Pan.ts`          | Expõe a API da aplicação e inicia o servidor Bun |
-| `src/Router.ts`       | Registra rotas `GET` e `POST`                    |
-| `src/routeHandler.ts` | Monta o contexto e executa os guards e handlers  |
-| `src/Context.ts`      | Cria o contexto da requisição                    |
-| `src/guards.ts`       | Contém as funções de validação das requisições   |
-| `src/types.ts`        | Define os tipos usados pelo framework            |
-| `Dockerfile`          | Define a imagem baseada em `oven/bun:1.3.2`      |
-| `docker-compose.yml`  | Publica a porta `3001` e gerencia o serviço      |
-| `Makefile`            | Fornece atalhos para o Docker Compose            |
+| Arquivo                     | Responsabilidade                                       |
+| --------------------------- | ------------------------------------------------------ |
+| `app/server.ts`             | Cria a aplicação de demonstração e registra as rotas   |
+| `src/core/index.ts`         | Classe `Pan`: expõe a API e inicia/para o servidor Bun |
+| `src/router/index.ts`       | Registra rotas `GET` e `POST`                          |
+| `src/utils/routeHandler.ts` | Monta o contexto e executa os guards e handlers        |
+| `src/context/index.ts`      | Cria o contexto da requisição                          |
+| `src/guards/index.ts`       | Contém as funções de validação das requisições         |
+| `src/types/index.ts`        | Define os tipos usados pelo framework                  |
+| `Dockerfile`                | Define a imagem baseada em `oven/bun:1.3.2`            |
+| `docker-compose.yml`        | Publica a porta `3001` e gerencia o serviço            |
+| `Makefile`                  | Fornece atalhos para o Docker Compose                  |
+| `EXEMPLOS-ROTAS.md`         | Exemplos de rotas e requests de teste                  |
 
 ## Scripts do projeto
 
