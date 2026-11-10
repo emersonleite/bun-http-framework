@@ -83,12 +83,10 @@ A estrutura esperada poderá ser semelhante a:
 ```text
 src/
   index.ts
-  core/index.ts
-  router/index.ts
-  context/index.ts
-  guards/index.ts
-  utils/routeHandler.ts
-  types/index.ts
+  core/        # Pan.ts, index.ts
+  router/      # Router.ts, routeHandler.ts, types.ts, index.ts
+  context/     # createContext.ts, types.ts, index.ts
+  guards/      # guardAuth.ts, guardRequireQuery.ts, types.ts, index.ts
 app/
   server.ts
 examples/
@@ -157,7 +155,7 @@ O usuário poderá instalar diretamente com Bun usando a URL ou a referência do
 ## Checklist de versão inicial
 
 - [x] Separar rotas de exemplo do núcleo da PAN.
-- [ ] Criar `src/index.ts`.
+- [x] Criar `src/index.ts`.
 - [ ] Definir exports públicos.
 - [ ] Decidir a licença.
 - [ ] Definir nome final do pacote e do repositório.
@@ -186,7 +184,7 @@ Origem: https://bun.com/docs/runtime/http/server, comparada com o código atual.
 
 ### Mais relevantes
 
-- [ ] **Erros em handler ou guard:** `createRouteHandler` (`src/utils/routeHandler.ts`) não tem `try/catch` e o `serve` não recebe a opção `error`. Passar `error(err)` ao `serve`, devolvendo 500 em JSON e registrando o erro no log.
+- [ ] **Erros em handler ou guard:** `createRouteHandler` (`src/router/routeHandler.ts`) não tem `try/catch` e o `serve` não recebe a opção `error`. Passar `error(err)` ao `serve`, devolvendo 500 em JSON e registrando o erro no log.
 - [ ] **Guards assíncronos:** `guard(ctx)` não usa `await` e o tipo é `Response | null`. Um guard assíncrono devolveria uma Promise (truthy) e a rota responderia com ela. Aceitar `Response | null | Promise<...>` e fazer `await guard(ctx)`.
 - [ ] **405 ausente:** quando o path existe mas o método não (ex.: `DELETE /mosca/1/ola/2`), a requisição provavelmente cai no 404 do `fetch`. Testar; se confirmado, checar o path em `routes` e devolver 405 com o header `Allow`. A doc não descreve esse caso, então é inferência a validar.
 - [ ] **Porta e opções do `listen`:** o Bun lê `BUN_PORT`, `PORT` ou `NODE_PORT` quando `port` não é passado, mas `app/server.ts` fixa 3001. Aceitar `listen(options?: { port?, hostname? })` e usar `PORT` no exemplo. Permite `port: 0` nos testes, lendo `server.port`.

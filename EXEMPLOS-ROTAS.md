@@ -7,7 +7,7 @@ Imports usados nos exemplos:
 ```ts
 import { createContext } from "../context";
 import { guardAuth, guardRequireQuery } from "../guards";
-import { createRouteHandler } from "../utils/routeHandler";
+import { createRouteHandler } from "../router/routeHandler";
 ```
 
 ## 1. Rota direta do Bun
@@ -64,7 +64,7 @@ Mesma rota, mas deixando o `createRouteHandler` fazer os passos 1 e 2. É exatam
 },
 ```
 
-O que acontece em `return contextHandler(ctx)` (`src/utils/routeHandler.ts`):
+O que acontece em `return contextHandler(ctx)` (`src/router/routeHandler.ts`):
 
 - `contextHandler` é a função `(ctx) => ctx.res.json(...)` passada como 1º argumento do `createRouteHandler`.
 - Ela **não** rodou até agora. O `createRouteHandler` só a guardou (closure).
