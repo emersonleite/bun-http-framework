@@ -179,3 +179,29 @@ O usuário poderá instalar diretamente com Bun usando a URL ou a referência do
 - A API pública está documentada e coberta pelos testes principais.
 - Uma tag versionada permite reproduzir a instalação.
 - O README explica claramente que a primeira versão é Bun-only.
+
+## Ajustes futuros (revisão da documentação do `Bun.serve`)
+
+Origem: https://bun.com/docs/runtime/http/server, comparada com o código atual. Itens ordenados por impacto.
+
+### Mais relevantes
+
+- [ ] **Erros em handler ou guard:** `createRouteHandler` (`src/utils/routeHandler.ts`) não tem `try/catch` e o `serve` não recebe a opção `error`. Passar `error(err)` ao `serve`, devolvendo 500 em JSON e registrando o erro no log.
+- [ ] **Guards assíncronos:** `guard(ctx)` não usa `await` e o tipo é `Response | null`. Um guard assíncrono devolveria uma Promise (truthy) e a rota responderia com ela. Aceitar `Response | null | Promise<...>` e fazer `await guard(ctx)`.
+- [ ] **405 ausente:** quando o path existe mas o método não (ex.: `DELETE /mosca/1/ola/2`), a requisição provavelmente cai no 404 do `fetch`. Testar; se confirmado, checar o path em `routes` e devolver 405 com o header `Allow`. A doc não descreve esse caso, então é inferência a validar.
+- [ ] **Porta e opções do `listen`:** o Bun lê `BUN_PORT`, `PORT` ou `NODE_PORT` quando `port` não é passado, mas `app/server.ts` fixa 3001. Aceitar `listen(options?: { port?, hostname? })` e usar `PORT` no exemplo. Permite `port: 0` nos testes, lendo `server.port`.
+- [ ] **Rotas duplicadas:** `addRoute` (`src/router/index.ts`) sobrescreve em silêncio o mesmo método e path registrados duas vezes. Lançar erro ou avisar.
+
+### Menores
+
+- [ ] **`listen()` chamado duas vezes:** sobe um segundo servidor e perde a referência ao primeiro. Lançar erro se `this.server` já existir.
+- [ ] **`stop()`:** retorna Promise; tipar como `Promise<void>` e documentar. Para shutdown suave, considerar `closeIdleConnections()`.
+- [ ] **Tipo do servidor:** a doc usa `Serve.Options<undefined>`. Se houver WebSocket no futuro, tornar `Pan` genérico (`Pan<T>`).
+- [ ] **`createContext` desnecessariamente `async`:** `buildContextRequest` não espera nada. Tornar síncrono evita uma Promise por requisição.
+- [ ] **IP e timeout por requisição:** o Bun passa `(req, server)` ao handler, mas `RequestHandler` ignora o `server`. Expor no `ctx` se for preciso `server.requestIP(req)` ou `server.timeout(req, 0)` (útil para SSE).
+- [ ] **Versão do Bun:** o `Dockerfile` usa `oven/bun:1.3.2` e o ambiente local roda 1.4.2. `routes` exige 1.2.3 ou mais, então funciona, mas convém alinhar as versões.
+- [ ] **`fetch` do `listen` é opcional:** desde o Bun 1.2.3 o `fetch` só é obrigatório em versões anteriores. Com o Bun atual (1.3.2 no Docker, 1.4.2 local) ele serve apenas para definir o 404 customizado (hoje `"Not found"`, status 404) e é o lugar natural para tratar o 405. Decidir se mantém o `fetch` ou usa uma rota wildcard `"/*"` com `ctx.res.notFound()`. Sem nenhum dos dois, vale o 404 padrão do Bun, cujo corpo não foi verificado. Se a PAN passar a suportar Bun < 1.2.3, o `fetch` volta a ser obrigatório.
+
+### A verificar na doc
+
+A página de `Bun.serve` não cobre a tipagem de `req.params`, a precedência entre rotas nem a opção `development`. Consultar https://bun.com/docs/runtime/http/routing antes de decidir sobre esses pontos.
