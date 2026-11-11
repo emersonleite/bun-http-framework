@@ -2,12 +2,15 @@
   "scripts": {
     "dev": "bun run --watch app/server.ts",
     "build": "bun build ./app/server.ts --outdir ./out --target bun && bun preview",
-    "preview": "bun run --watch ./out/server.js"
+    "preview": "bun run --watch ./out/server.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "name": "bun-framework",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "^3.9.10"
   },
   "peerDependencies": {
     "typescript": "^5"
