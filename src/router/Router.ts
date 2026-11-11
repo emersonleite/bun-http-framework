@@ -1,10 +1,6 @@
-import { type ContextGuard } from "../guards";
+import type { ContextGuard } from "../guards";
 import { createRouteHandler } from "./routeHandler";
-import {
-  HttpMethod,
-  type ContextHandler,
-  type RequestHandler,
-} from "./types";
+import { HttpMethod, type ContextHandler, type RequestHandler } from "./types";
 
 export class Router {
   routes: Record<string, Partial<Record<HttpMethod, RequestHandler>>> = {};

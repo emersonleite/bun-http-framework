@@ -5,8 +5,6 @@ import type { ContextGuard } from "../guards";
 export class Pan {
   private router: Router;
   private server?: Server<undefined>;
-  // private guards: any; /* To be implemented */
-  // private middlewares: any; /* To be implemented */
 
   constructor() {
     this.router = new Router();
@@ -15,9 +13,6 @@ export class Pan {
   private getRoutes() {
     return this.router.routes;
   }
-
-  /* To be implemented */
-  // use() {}
 
   get(
     path: string,

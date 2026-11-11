@@ -2,7 +2,7 @@
 
 Microframework HTTP experimental escrito em TypeScript e executado com [Bun](https://bun.com). O projeto demonstra um roteador próprio, contexto de requisição, handlers e guards.
 
-> O projeto está em desenvolvimento. Algumas partes, como middlewares globais e integração com banco SQLite, ainda estão preparadas para implementação.
+> O projeto está em desenvolvimento. Algumas partes, como middlewares globais e integração com banco SQLite, ainda não foram implementadas.
 
 ## Pré-requisitos
 
@@ -103,6 +103,8 @@ Guards são funções executadas antes do handler de uma rota. Eles podem valida
 
 Essa abordagem permite manter regras de validação separadas da lógica principal de cada handler e reutilizá-las em diferentes rotas.
 
+O projeto inclui dois guards prontos em `src/guards/`: `guardAuth`, que retorna `401` quando falta o header `Authorization`, e `guardRequireQuery`, que retorna `400` quando falta o parâmetro `?q=`. Um guard é uma função `(ctx) => Response | null`: retornar `null` deixa a requisição seguir.
+
 ## Estrutura principal
 
 O código do framework fica em `src/`, dividido em módulos. Cada módulo tem um `index.ts` que reexporta a sua API e um `types.ts` com os tipos que ele possui. A aplicação de demonstração fica em `app/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
@@ -121,7 +123,7 @@ Convenção de nomes: arquivos que exportam uma classe usam PascalCase (`Pan.ts`
 | `Dockerfile`                 | Define a imagem baseada em `oven/bun:1.3.2`            |
 | `docker-compose.yml`         | Publica a porta `3001` e gerencia o serviço            |
 | `Makefile`                   | Fornece atalhos para o Docker Compose                  |
-| `EXEMPLOS-ROTAS.md`          | Exemplos de rotas e requests de teste                  |
+| `EXEMPLOS-ROTAS.md`          | Exemplos de rotas                                      |
 
 ## Scripts do projeto
 
