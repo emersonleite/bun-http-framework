@@ -1,6 +1,10 @@
-import type { ContextGuard } from "../guards";
 import { createRouteHandler } from "./routeHandler";
-import { HttpMethod, type ContextHandler, type RequestHandler } from "./types";
+import {
+  HttpMethod,
+  type ContextHandler,
+  type RequestHandler,
+  type RouteOptions,
+} from "./types";
 
 export class Router {
   routes: Record<string, Partial<Record<HttpMethod, RequestHandler>>> = {};
@@ -8,29 +12,18 @@ export class Router {
   private addRoute(
     method: HttpMethod,
     path: string,
-    routeHandler: RequestHandler,
+    contextHandler: ContextHandler,
+    options?: RouteOptions,
   ) {
-    if (!this.routes[path]) {
-      this.routes[path] = {};
-    }
-    this.routes[path][method] = routeHandler;
+    this.routes[path] ??= {};
+    this.routes[path][method] = createRouteHandler(contextHandler, options);
   }
 
-  get(
-    path: string,
-    contextHandler: ContextHandler,
-    guards: ContextGuard[] = [],
-  ) {
-    const routeHandler = createRouteHandler(contextHandler, guards);
-    this.addRoute(HttpMethod.GET, path, routeHandler);
+  get(path: string, contextHandler: ContextHandler, options?: RouteOptions) {
+    this.addRoute(HttpMethod.GET, path, contextHandler, options);
   }
 
-  post(
-    path: string,
-    contextHandler: ContextHandler,
-    guards: ContextGuard[] = [],
-  ) {
-    const routeHandler = createRouteHandler(contextHandler, guards);
-    this.addRoute(HttpMethod.POST, path, routeHandler);
+  post(path: string, contextHandler: ContextHandler, options?: RouteOptions) {
+    this.addRoute(HttpMethod.POST, path, contextHandler, options);
   }
 }

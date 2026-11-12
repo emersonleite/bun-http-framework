@@ -1,5 +1,7 @@
 import type { BunRequest } from "bun";
 import type { Context } from "../context";
+import type { ContextGuard } from "../guards";
+import type { ContextMiddleware } from "../middlewares";
 
 export enum HttpMethod {
   GET = "GET",
@@ -12,3 +14,8 @@ export enum HttpMethod {
 export type RequestHandler = (req: BunRequest) => Response | Promise<Response>;
 
 export type ContextHandler = (ctx: Context) => Response | Promise<Response>;
+
+export type RouteOptions = {
+  middlewares?: ContextMiddleware[];
+  guards?: ContextGuard[];
+};
