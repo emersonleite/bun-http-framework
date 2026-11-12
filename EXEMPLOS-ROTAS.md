@@ -59,7 +59,7 @@ Mesma rota, mas deixando o `createRouteHandler` fazer os passos 1 e 2. É exatam
 "/teste-ctx-guards/:nome": {
   GET: createRouteHandler(
     (ctx) => ctx.res.json({ nome: ctx.req.params.nome }),
-    [guardAuth],
+    { guards: [guardAuth] },
   ),
 },
 ```
@@ -81,7 +81,7 @@ Em vez de passar o resultado do `createRouteHandler` direto no `GET`, escreve-se
   GET: (req) =>
     createRouteHandler(
       (ctx) => ctx.res.json({ nome: ctx.req.params.nome }),
-      [guardAuth],
+      { guards: [guardAuth] },
     )(req),
 },
 ```

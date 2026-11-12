@@ -1,8 +1,8 @@
 # Bun HTTP Framework
 
-Microframework HTTP experimental escrito em TypeScript e executado com [Bun](https://bun.com). O projeto demonstra um roteador próprio, contexto de requisição, handlers e guards.
+Microframework HTTP experimental escrito em TypeScript e executado com [Bun](https://bun.com). O projeto demonstra um roteador próprio, contexto de requisição, handlers, guards e middlewares.
 
-> O projeto está em desenvolvimento. Algumas partes, como middlewares globais e integração com banco SQLite, ainda não foram implementadas.
+> O projeto está em desenvolvimento. Algumas partes, como a integração com banco SQLite, ainda não foram implementadas.
 
 ## Pré-requisitos
 
@@ -105,25 +105,43 @@ Essa abordagem permite manter regras de validação separadas da lógica princip
 
 O projeto inclui dois guards prontos em `src/guards/`: `guardAuth`, que retorna `401` quando falta o header `Authorization`, e `guardRequireQuery`, que retorna `400` quando falta o parâmetro `?q=`. Um guard é uma função `(ctx) => Response | null`: retornar `null` deixa a requisição seguir.
 
+## Middlewares
+
+Middlewares são funções `(ctx, next) => Response | Promise<Response>` que envolvem a execução da rota. Chamar `next()` passa para o próximo passo da cadeia e devolve a `Response` dele, então o middleware pode rodar código antes e depois do handler ou até trocar a resposta. Não chamar `next()` interrompe a requisição.
+
+A ordem de execução é: middlewares, guards, handler. Com `[A, B]`, o fluxo é `A (antes) → B (antes) → guards → handler → B (depois) → A (depois)`.
+
+```ts
+app.use({ middlewares: [loggerMiddleware] }); // global: vale para as rotas declaradas depois
+
+app.get("/users", handler, {
+  middlewares: [outroMiddleware], // por rota
+  guards: [guardAuth],
+});
+```
+
+`app.use()` aceita `middlewares` e `guards` globais, que vêm antes dos definidos na rota. Como a lista é copiada no registro, chame `use()` antes de declarar as rotas. Requisições para rotas inexistentes (404) não passam pelos middlewares globais. O projeto inclui `loggerMiddleware` em `src/middlewares/`.
+
 ## Estrutura principal
 
 O código do framework fica em `src/`, dividido em módulos. Cada módulo tem um `index.ts` que reexporta a sua API e um `types.ts` com os tipos que ele possui. A aplicação de demonstração fica em `app/`. Os arquivos de configuração e execução permanecem na raiz do projeto.
 
 Convenção de nomes: arquivos que exportam uma classe usam PascalCase (`Pan.ts`, `Router.ts`); os demais usam camelCase (`routeHandler.ts`, `guardAuth.ts`).
 
-| Arquivo                      | Responsabilidade                                       |
-| ---------------------------- | ------------------------------------------------------ |
-| `app/server.ts`              | Cria a aplicação de demonstração e registra as rotas   |
-| `src/index.ts`               | Entrypoint público da biblioteca (`Pan` e tipos)       |
-| `src/core/Pan.ts`            | Classe `Pan`: expõe a API e inicia/para o servidor Bun |
-| `src/router/Router.ts`       | Registra rotas `GET` e `POST`                          |
-| `src/router/routeHandler.ts` | Monta o contexto e executa os guards e handlers        |
-| `src/context/`               | Cria o contexto da requisição (`createContext`)        |
-| `src/guards/`                | Contém as funções de validação das requisições         |
-| `Dockerfile`                 | Define a imagem baseada em `oven/bun:1.3.2`            |
-| `docker-compose.yml`         | Publica a porta `3001` e gerencia o serviço            |
-| `Makefile`                   | Fornece atalhos para o Docker Compose                  |
-| `EXEMPLOS-ROTAS.md`          | Exemplos de rotas                                      |
+| Arquivo                      | Responsabilidade                                         |
+| ---------------------------- | -------------------------------------------------------- |
+| `app/server.ts`              | Cria a aplicação de demonstração e registra as rotas     |
+| `src/index.ts`               | Entrypoint público da biblioteca (`Pan` e tipos)         |
+| `src/core/Pan.ts`            | Classe `Pan`: expõe a API e inicia/para o servidor Bun   |
+| `src/router/Router.ts`       | Registra rotas `GET` e `POST`                            |
+| `src/router/routeHandler.ts` | Monta o contexto e executa middlewares, guards e handler |
+| `src/context/`               | Cria o contexto da requisição (`createContext`)          |
+| `src/guards/`                | Contém as funções de validação das requisições           |
+| `src/middlewares/`           | Contém os middlewares (`loggerMiddleware`) e seus tipos  |
+| `Dockerfile`                 | Define a imagem baseada em `oven/bun:1.3.2`              |
+| `docker-compose.yml`         | Publica a porta `3001` e gerencia o serviço              |
+| `Makefile`                   | Fornece atalhos para o Docker Compose                    |
+| `EXEMPLOS-ROTAS.md`          | Exemplos de rotas                                        |
 
 ## Scripts do projeto
 

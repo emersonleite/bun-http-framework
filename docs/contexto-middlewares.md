@@ -4,12 +4,12 @@ Nota para retomar a conversa sobre a implementação de middlewares. Registra o 
 
 ## Estado do código
 
-- **Tipos criados** (sem uso ainda):
+- **Tipos e middleware de exemplo** (já ligados ao `createRouteHandler`):
   - `src/middlewares/types.ts`: `Next = () => Promise<Response>` e `ContextMiddleware = (ctx: Context, next: Next) => Response | Promise<Response>`.
   - `src/middlewares/loggerMiddleware.ts`: exemplo de middleware que registra o método da requisição e retorna `next()`.
   - `src/middlewares/index.ts`: reexporta `./loggerMiddleware` e `./types`.
   - `src/index.ts`: exporta `ContextMiddleware` e `Next` como tipos públicos.
-- **`src/router/routeHandler.ts`** não tem lógica de middleware por enquanto. Decisão do usuário: o `createRouteHandler` continua só com guards e handler até a ligação ser implementada. O rascunho anterior (tipo local `Middleware`, laço `for...in`) foi removido.
+- **`src/router/routeHandler.ts`** implementa a cadeia (`runMiddleware` recursivo com índice) e recebe `RouteOptions` (`{ guards, middlewares }`, tipo em `src/router/types.ts`) no lugar de parâmetros posicionais. `Pan.use()` acumula guards e middlewares globais, copiados no registro da rota.
 - **Erro de tipo antigo**: `app/server.ts`, `ctx.req.params?.id`, com `Property 'id' does not exist on type '{}'`. Pode ser corrigido tipando `params` em `ContextRequest`.
 
 ## Decisões tomadas
@@ -42,9 +42,9 @@ async (ctx, next) => {
 
 O `next()` devolve a `Response` do restante da cadeia, por isso o tipo `Next` retorna `Promise<Response>`. A ordem em cadeia, com `[A, B]` e handler `H`, é `A (antes) → B (antes) → H → B (depois) → A (depois)`.
 
-## Implementação proposta em `createRouteHandler`
+## Implementação em `createRouteHandler` (rascunho original)
 
-Não se usa `for` para os middlewares: num laço, o `routeHandler` chamaria um após o outro sem esperar a resposta, e o middleware perderia a chance de agir depois do handler. O encadeamento é uma recursão com índice:
+Abaixo está o rascunho original, que usava `dispatch` e parâmetros posicionais; o código atual usa `runMiddleware` e `RouteOptions`. Não se usa `for` para os middlewares: num laço, o `routeHandler` chamaria um após o outro sem esperar a resposta, e o middleware perderia a chance de agir depois do handler. O encadeamento é uma recursão com índice:
 
 ```ts
 export function createRouteHandler(
@@ -103,12 +103,12 @@ Mesmo mecanismo, só muda de onde vem a lista:
 
 ## Próximos passos
 
-1. Ligar `ContextMiddleware` ao `createRouteHandler` (código acima).
-2. Passar a lista de middlewares do `Router` ao `createRouteHandler`, com a opção por rota.
-3. Implementar `Pan.use()` para os middlewares globais e decidir a regra de ordem.
+1. ~~Ligar `ContextMiddleware` ao `createRouteHandler`.~~ (feito)
+2. ~~Passar a lista de middlewares do `Router` ao `createRouteHandler`, com a opção por rota.~~ (feito, via `RouteOptions`)
+3. ~~Implementar `Pan.use()` para os middlewares globais.~~ (feito: a lista é copiada no registro, então `use()` vem antes das rotas)
 4. Corrigir o erro de tipo de `ctx.req.params` em `app/server.ts`.
 5. Opcional: ligar `noUnusedLocals` e `noUnusedParameters` no `tsconfig.json` e criar o script `typecheck` (`tsc --noEmit`).
-6. Atualizar o README (seção sobre middlewares) e o `PLANO-FUTURO-PAN.md`.
+6. ~~Atualizar o README e o `PLANO-FUTURO-PAN.md`.~~ (feito)
 
 ## Outras decisões da sessão
 
